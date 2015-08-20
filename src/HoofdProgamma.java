@@ -5,7 +5,6 @@ import java.util.Scanner;
  */
 public class HoofdProgamma {
     private static Restaurant[] restaurants;
-    private static Kok[] koks;
 
     public static void main(String[] args) {
         // Toevoegen van drie koks
@@ -15,8 +14,6 @@ public class HoofdProgamma {
         k1 = new Kok("Jeroen", "maandag");
         k2 = new Kok("Wout", "dinsdag");
         k3 = new Kok("Piet", "donderdag");
-
-        koks = new Kok[]{k1,k2,k3};
 
         // Toevoegen drie restaurants
 
@@ -30,18 +27,14 @@ public class HoofdProgamma {
         //voor straks het mij makkelijk te maken ga ik ze in een array zetten kan ik ze snel via een lus doorlopen
         restaurants = new Restaurant[]{r1,r2,r3};
 
-        try{
-            System.out.println(maakReservatie());
-        }catch (KokNietVrijException knve){
-            System.out.println(knve.getMessage());
-        }catch (GerechtNietBeschikbaarException gnbe){
-            System.out.println(gnbe.getMessage());
-        }
+        String reservatieTekst = maakReservatie();
+       if(reservatieTekst!=null) System.out.println(reservatieTekst);
+
 
 
     }
 
-    private static String maakReservatie() throws KokNietVrijException, GerechtNietBeschikbaarException {
+    private static String maakReservatie(){
         Scanner sc = new Scanner(System.in);
 
         // keuze restaurant
@@ -53,19 +46,15 @@ public class HoofdProgamma {
         // -1 vermits index begint met 0 in array maar niet bij restaurant
         Restaurant gekozenRestaurant = restaurants[keuze-1];
 
-        // keuze dag
-        String keuzeDag = sc.nextLine();
+        try{
+            return gekozenRestaurant.maakReservatie();
+        }catch (KokNietVrijException knve){
+            System.out.println(knve.getMessage());
+        }catch (GerechtNietBeschikbaarException gnbe){
+            System.out.println(gnbe.getMessage());
+        }
 
-        // keuze week
-        int keuzeWeek = Integer.parseInt(sc.nextLine());
 
-        // fouten zoeken
-        // kok niet beschikbaar
-        if(koks[keuze-1].getVrijeDag().equals(keuzeDag)) throw new KokNietVrijException("Kok is niet vrij");
-
-        // gerecht niet beschikbaar
-        if(!restaurants[keuze-1].getSpecialiteit().isBeschikbaar(keuzeWeek)) throw new GerechtNietBeschikbaarException("Het gerecht is niet beschikbaar");
-
-        return "Restaurant: " + restaurants[keuze-1];
+        return null;
     }
 }
